@@ -9,15 +9,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DeliveryActivity extends AppCompatActivity {
 
+    public static List<CartItemModel> cartItemModelList;
     private RecyclerView deliveryRecyclerView;
     private Button changeOrAddNewAddressButton;
     public static final int SELECT_ADDRESS = 0;
+    private TextView totalAmount;
+    private TextView fullname;
+    private TextView fullAddress;
+    private TextView pincode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +39,18 @@ public class DeliveryActivity extends AppCompatActivity {
 
         changeOrAddNewAddressButton = findViewById(R.id.change_or_address_btn);
 
+        totalAmount = findViewById(R.id.total_cart_amount);
+
+        fullname = findViewById(R.id.fullname);
+        fullAddress = findViewById(R.id.address);
+        pincode = findViewById(R.id.pincode);
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         deliveryRecyclerView.setLayoutManager(layoutManager);
 
-        List<CartItemModel> cartItemModelList = new ArrayList<>();
-        cartItemModelList.add(new CartItemModel(0, R.drawable.connect, "Pixel 222", 2, "Rs. 49999/-", "Rs. 59999/-", 1, 0, 0));
-        cartItemModelList.add(new CartItemModel(0, R.drawable.connect, "Pixel 222", 0, "Rs. 49999/-", "Rs. 59999/-", 1, 1, 0));
-        cartItemModelList.add(new CartItemModel(0, R.drawable.connect, "Pixel 222", 2, "Rs. 49999/-", "Rs. 59999/-", 1, 2, 0));
-
-
-        cartItemModelList.add(new CartItemModel(1, "Price (3 items", "Rs. 330040/-", "Free", "Rs. 330040/-", "Rs. 5999/-"));
-
-
-        CartAdapter cartAdapter = new CartAdapter(cartItemModelList);
+        CartAdapter cartAdapter = new CartAdapter(cartItemModelList, totalAmount, false);
         deliveryRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
         changeOrAddNewAddressButton.setVisibility(View.VISIBLE);
@@ -58,8 +60,22 @@ public class DeliveryActivity extends AppCompatActivity {
                 Intent myAddressIntent = new Intent(DeliveryActivity.this, MyAddressesActivity.class);
                 myAddressIntent.putExtra("MODE", SELECT_ADDRESS);
                 startActivity(myAddressIntent);
+             ////// DOUBT deleted EXTRA startActivity
             }
         });
+
+        fullname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
+        fullAddress.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
+        pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        fullname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
+        fullAddress.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
+        pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
     }
 
     @Override
