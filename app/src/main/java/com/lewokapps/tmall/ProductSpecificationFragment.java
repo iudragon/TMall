@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,6 +23,7 @@ public class ProductSpecificationFragment extends Fragment {
     }
 
     private RecyclerView productSpecificationRecyclerView;
+    public List<ProductSpecificationModel> productSpecificationModelList;
 
 
     @Override
@@ -39,8 +39,7 @@ public class ProductSpecificationFragment extends Fragment {
 
         productSpecificationRecyclerView.setLayoutManager(linearLayoutManager);
 
-        List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
-        productSpecificationModelList.add(new ProductSpecificationModel(0, "General"));
+       /* productSpecificationModelList.add(new ProductSpecificationModel(0, "General"));
         productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM", "8GB"));
         productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM", "8GB"));
         productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM", "8GB"));
@@ -81,7 +80,7 @@ public class ProductSpecificationFragment extends Fragment {
         productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM", "8GB"));
         productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM", "8GB"));
         productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM", "8GB"));
-
+*/
 
 
         ProductSpecificationAdapter productSpecificationAdapter = new ProductSpecificationAdapter(productSpecificationModelList);

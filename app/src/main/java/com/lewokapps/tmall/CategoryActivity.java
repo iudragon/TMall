@@ -11,9 +11,17 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.lewokapps.tmall.DBqueries.lists;
+import static com.lewokapps.tmall.DBqueries.loadFragmentData;
+import static com.lewokapps.tmall.DBqueries.loadedCategoriesNames;
+
 public class CategoryActivity extends AppCompatActivity {
 
     private RecyclerView categoryRecyclerView;
+
+    private List<HomePageModel> homePageModelFakeList = new ArrayList<>();
+
+    private HomePageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,69 +35,63 @@ public class CategoryActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        ///// home page fake list
+
+        List<SliderModel> sliderModelFakeList = new ArrayList<>();
+        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
+        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
+        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
+        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
+        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
+
+        List<HorizontalProductScrollModel> horizontalProductScrollModelFakeList = new ArrayList<>();
+
+        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
+
+        homePageModelFakeList.add(new HomePageModel(0, sliderModelFakeList));
+        homePageModelFakeList.add(new HomePageModel(1, "", "#ffffff"));
+        homePageModelFakeList.add(new HomePageModel(2, "", "#ffffff", horizontalProductScrollModelFakeList, new ArrayList<WishlistModel>()));
+        homePageModelFakeList.add(new HomePageModel(3, "", "#ffffff", horizontalProductScrollModelFakeList));
+
+        ///// home page fake list
+
         categoryRecyclerView = findViewById(R.id.category_recyclerview);
-
-        ///////// Banner Slider
-
-        List<SliderModel> sliderModelList = new ArrayList<>();
-
-        sliderModelList.add(new SliderModel(R.drawable.ic_person_outline, "#ddaaee"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_sign_out, "#ddaaee"));
-
-        sliderModelList.add(new SliderModel(R.drawable.farmer, "#ddaaee"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_add_circle, "#ddaaee"));
-        sliderModelList.add(new SliderModel(R.drawable.connect, "#ddaaee"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_shopping, "#ddaaee"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_favorite, "#ddaaee"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_person, "#ddaaee"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_person_outline, "#ddaaee"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_sign_out, "#ddaaee"));
-
-        sliderModelList.add(new SliderModel(R.drawable.farmer, "#ddaaee"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_add_circle, "#ddaaee"));
-
-
-        ///////// Banner Slider
-
-
-        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.farmer, "Redmi 6", "Niiiiice", "Rs. 6699"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.ic_add_circle, "Redmi 6", "Niiiiice", "Rs. 6699"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.ic_card_giftcard, "Redmi 6", "Niiiiice", "Rs. 6699"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.ic_favorite, "Redmi 6", "Niiiiice", "Rs. 6699"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.ic_mail_green, "Redmi 6", "Niiiiice", "Rs. 6699"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.ic_mail_red, "Redmi 6", "Niiiiice", "Rs. 6699"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.ic_fitness, "Redmi 6", "Niiiiice", "Rs. 6699"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.ic_fitness, "Redmi 6", "Niiiiice", "Rs. 6699"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.ic_fitness, "Redmi 6", "Niiiiice", "Rs. 6699"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.ic_close, "Redmi 6", "Niiiiice", "Rs. 6699"));
-
-
-        ///////// Horizontal Product Layout
-
-
-        /////////////////////////////
 
         LinearLayoutManager testingLayoutManager = new LinearLayoutManager(this);
         testingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         categoryRecyclerView.setLayoutManager(testingLayoutManager);
 
-        List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(0, sliderModelList));
-        homePageModelList.add(new HomePageModel(1, R.drawable.farmer, "#000000"));
-        homePageModelList.add(new HomePageModel(2, "Deals of the day!!!", horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(3, "Deals of the day!!!", horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(1, R.drawable.connect, "#0ddd00"));
-        homePageModelList.add(new HomePageModel(3, "Deals of the day!!!", horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(2, "Deals of the day!!!", horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(0, sliderModelList));
-        homePageModelList.add(new HomePageModel(1, R.drawable.ic_favorite, "#fff000"));
+
+        adapter = new HomePageAdapter(homePageModelFakeList);
 
 
-        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
+        int listPosition = 0;
 
+        for (int x = 0; x < loadedCategoriesNames.size(); x++) {
 
+            if (loadedCategoriesNames.get(x).equals(title.toUpperCase())) {
+
+                listPosition = x;
+            }
+        }
+
+        if (listPosition == 0) {
+
+            loadedCategoriesNames.add(title.toUpperCase());
+            lists.add(new ArrayList<HomePageModel>());
+
+            loadFragmentData(categoryRecyclerView, this, loadedCategoriesNames.size() - 1, title);
+        } else {
+            adapter = new HomePageAdapter(lists.get(listPosition));
+        }
         categoryRecyclerView.setAdapter(adapter);
+
+
         adapter.notifyDataSetChanged();
 
 

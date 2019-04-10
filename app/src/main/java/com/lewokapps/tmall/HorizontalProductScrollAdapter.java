@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
 
 public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<HorizontalProductScrollAdapter.ViewHolder> {
@@ -34,18 +37,15 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
     @Override
     public void onBindViewHolder(@NonNull HorizontalProductScrollAdapter.ViewHolder viewHolder, int position) {
 
-        int resource = horizontalProductScrollModelList.get(position).getProductImage();
+        String resource = horizontalProductScrollModelList.get(position).getProductImage();
 
         String title = horizontalProductScrollModelList.get(position).getProductTitle();
         String description = horizontalProductScrollModelList.get(position).getProductDescription();
         String price = horizontalProductScrollModelList.get(position).getProductPrice();
 
+        String productId = horizontalProductScrollModelList.get(position).getProductID();
 
-        viewHolder.setProductImage(resource);
-        viewHolder.setProductTitle(title);
-        viewHolder.setProductDescription(description);
-        viewHolder.setProductPrice(price);
-
+        viewHolder.setData(productId, resource, title, description, price);
 
     }
 
@@ -80,56 +80,33 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
             productDescription = itemView.findViewById(R.id.h_s_product_description);
             productPrice = itemView.findViewById(R.id.h_s_product_price);
 
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent productDetailsIntent = new Intent(itemView.getContext(), ProductDetailsActivity.class);
-                    itemView.getContext().startActivity(productDetailsIntent);
-                }
-            });
-
         }
 
-        private void setProductImage(int resource) {
+        private void setData(final String productId, String resource, String title, String description, String price) {
 
+            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.placeholdericonmini)).into(productImage);
 
-            productImage.setImageResource(resource);
-
-        }
-
-        private void setProductTitle(String title) {
-
-            productTitle.setText(title);
-        }
-
-        private void setProductDescription(String description) {
+            productPrice.setText("Rs. " + price + "/-");
 
             productDescription.setText(description);
+
+            productTitle.setText(title);
+
+            if (!title.equals("")) {
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent productDetailsIntent = new Intent(itemView.getContext(), ProductDetailsActivity.class);
+
+                        productDetailsIntent.putExtra("PRODUCT_ID", productId);
+
+                        itemView.getContext().startActivity(productDetailsIntent);
+                    }
+                });
+            }
+
         }
-
-        private void setProductPrice(String price) {
-
-            productPrice.setText(price);
-        }
-
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
