@@ -54,6 +54,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TextView averageRatingMiniView;
     private TextView totalRatingMiniView;
     private TextView productPrice;
+    private String productOriginalPrice;
     private TextView cuttedPrice;
 
     private ImageView codIndicator;
@@ -117,12 +118,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     ///// coupon dialog
 
-    public static TextView couponTitle;
-    public static TextView couponExpiryDate;
-    public static TextView couponBody;
-    private static RecyclerView couponsRecyclerView;
-    private static LinearLayout selectedCoupon;
-
+    private TextView couponTitle;
+    private TextView couponExpiryDate;
+    private TextView couponBody;
+    private RecyclerView couponsRecyclerView;
+    private LinearLayout selectedCoupon;
+    private TextView discountPrice;
+    private TextView originalPrice;
     ///// coupon dialog
 
     private Dialog loadingDialog;
@@ -214,6 +216,37 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         ///// loading dialog
 
+        final Dialog checkCouponPriceDialog = new Dialog(ProductDetailsActivity.this);
+        checkCouponPriceDialog.setContentView(R.layout.coupon_redeem_dialog);
+        checkCouponPriceDialog.setCancelable(true);
+        checkCouponPriceDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        ImageView toggleRecyclerView = checkCouponPriceDialog.findViewById(R.id.toggle_recyclerview);
+        couponsRecyclerView = checkCouponPriceDialog.findViewById(R.id.coupons_recyclerview);
+        selectedCoupon = checkCouponPriceDialog.findViewById(R.id.selected_coupon);
+
+        couponTitle = checkCouponPriceDialog.findViewById(R.id.coupon_title);
+        couponExpiryDate = checkCouponPriceDialog.findViewById(R.id.coupon_validity);
+        couponBody = checkCouponPriceDialog.findViewById(R.id.coupon_body);
+
+
+        originalPrice = checkCouponPriceDialog.findViewById(R.id.original_price);
+        discountPrice = checkCouponPriceDialog.findViewById(R.id.discount_price);
+
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(ProductDetailsActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        couponsRecyclerView.setLayoutManager(layoutManager);
+
+
+
+
+        toggleRecyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogRecyclerView();
+            }
+        });
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -247,6 +280,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                 totalRatingMiniView.setText("(" + documentSnapshot.get("total_ratings") + ")ratings");
 
                                 productPrice.setText("Rs. " + documentSnapshot.get("product_price").toString() + "/-");
+                                productOriginalPrice = documentSnapshot.get("product_price").toString();
+
+                                /// for coupon dialog
+                                originalPrice.setText(productPrice.getText());
+
+                                MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(DBqueries.rewardModelList, true, couponsRecyclerView, selectedCoupon, productOriginalPrice, couponTitle, couponExpiryDate, couponBody, discountPrice);
+                                couponsRecyclerView.setAdapter(myRewardsAdapter);
+                                myRewardsAdapter.notifyDataSetChanged();
+                                /// for coupon dialog
 
                                 cuttedPrice.setText("Rs. " + documentSnapshot.get("cutted_price").toString() + "/-");
 
@@ -331,7 +373,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                                         DBqueries.loadWishlist(ProductDetailsActivity.this, loadingDialog, false);
 
-                                    } else {
+                                    }
+
+                                    if (DBqueries.rewardModelList.size() == 0) {
+                                        DBqueries.loadRewards(ProductDetailsActivity.this, loadingDialog, false);
+                                    }
+
+                                    if (DBqueries.cartList.size() != 0 && DBqueries.wishlist.size() != 0 && DBqueries.rewardModelList.size() != 0) {
                                         loadingDialog.dismiss();
                                     }
 
@@ -733,53 +781,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
         });
 
 
-///// coupon dialog
-
-        final Dialog checkCouponPriceDialog = new Dialog(ProductDetailsActivity.this);
-        checkCouponPriceDialog.setContentView(R.layout.coupon_redeem_dialog);
-        checkCouponPriceDialog.setCancelable(true);
-        checkCouponPriceDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        ImageView toggleRecyclerView = checkCouponPriceDialog.findViewById(R.id.toggle_recyclerview);
-        couponsRecyclerView = checkCouponPriceDialog.findViewById(R.id.coupons_recyclerview);
-        selectedCoupon = checkCouponPriceDialog.findViewById(R.id.selected_coupon);
-
-        couponTitle = checkCouponPriceDialog.findViewById(R.id.coupon_title);
-        couponExpiryDate = checkCouponPriceDialog.findViewById(R.id.coupon_validity);
-        couponBody = checkCouponPriceDialog.findViewById(R.id.coupon_body);
-
-
-        TextView originalPrice = checkCouponPriceDialog.findViewById(R.id.original_price);
-        TextView discountPrice = checkCouponPriceDialog.findViewById(R.id.discount_price);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(ProductDetailsActivity.this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        couponsRecyclerView.setLayoutManager(layoutManager);
-
-//        List<RewardModel> rewardModelList = new ArrayList<>();
-//        rewardModelList.add(new RewardModel("Cashback", "till 2nd Jan 2020", "Haaha lol. You won. Haaahah. You won really. hahahahaa 20 % off"));
-//        rewardModelList.add(new RewardModel("Discount", "till 2nd Jan 2020", "Haaha lol. You won. Haaahah. You won really. hahahahaa 20 % off"));
-//        rewardModelList.add(new RewardModel("Buy 1 get 3 free", "till 2nd Jan 2020", "Haaha lol. You won. Haaahah. You won really. hahahahaa 20 % off"));
-//        rewardModelList.add(new RewardModel("Cashback", "till 2nd Jan 2020", "Haaha lol. You won. Haaahah. You won really. hahahahaa 20 % off"));
-//        rewardModelList.add(new RewardModel("Cashback", "till 2nd Jan 2020", "Haaha lol. You won. Haaahah. You won really. hahahahaa 20 % off"));
-//        rewardModelList.add(new RewardModel("Cashback", "till 2nd Jan 2020", "Haaha lol. You won. Haaahah. You won really. hahahahaa 20 % off"));
-//        rewardModelList.add(new RewardModel("Cashback", "till 2nd Jan 2020", "Haaha lol. You won. Haaahah. You won really. hahahahaa 20 % off"));
-//        rewardModelList.add(new RewardModel("Cashback", "till 2nd Jan 2020", "Haaha lol. You won. Haaahah. You won really. hahahahaa 20 % off"));
-
-
-//        MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(rewardModelList, true);
-//        couponsRecyclerView.setAdapter(myRewardsAdapter);
-//        myRewardsAdapter.notifyDataSetChanged();
-
-        toggleRecyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialogRecyclerView();
-            }
-        });
-
-        ///// coupon dialog
-
         couponRedeemBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -898,7 +899,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     }
 
-    public static void showDialogRecyclerView() {
+    private void showDialogRecyclerView() {
 
         if (couponsRecyclerView.getVisibility() == View.GONE) {
 
