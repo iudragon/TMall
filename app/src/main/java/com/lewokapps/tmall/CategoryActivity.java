@@ -1,12 +1,14 @@
 package com.lewokapps.tmall;
 
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.lewokapps.tmall.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +21,9 @@ public class CategoryActivity extends AppCompatActivity {
 
     private RecyclerView categoryRecyclerView;
 
-    private List<HomePageModel> homePageModelFakeList = new ArrayList<>();
+    private List<com.lewokapps.tmall.HomePageModel> homePageModelFakeList = new ArrayList<>();
 
-    private HomePageAdapter adapter;
+    private com.lewokapps.tmall.HomePageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,26 +39,26 @@ public class CategoryActivity extends AppCompatActivity {
 
         ///// home page fake list
 
-        List<SliderModel> sliderModelFakeList = new ArrayList<>();
-        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
-        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
-        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
-        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
-        sliderModelFakeList.add(new SliderModel("null", "#ffffff"));
+        List<com.lewokapps.tmall.SliderModel> sliderModelFakeList = new ArrayList<>();
+        sliderModelFakeList.add(new com.lewokapps.tmall.SliderModel("null", "#ffffff"));
+        sliderModelFakeList.add(new com.lewokapps.tmall.SliderModel("null", "#ffffff"));
+        sliderModelFakeList.add(new com.lewokapps.tmall.SliderModel("null", "#ffffff"));
+        sliderModelFakeList.add(new com.lewokapps.tmall.SliderModel("null", "#ffffff"));
+        sliderModelFakeList.add(new com.lewokapps.tmall.SliderModel("null", "#ffffff"));
 
-        List<HorizontalProductScrollModel> horizontalProductScrollModelFakeList = new ArrayList<>();
+        List<com.lewokapps.tmall.HorizontalProductScrollModel> horizontalProductScrollModelFakeList = new ArrayList<>();
 
-        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
-        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
-        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
-        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
-        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
-        horizontalProductScrollModelFakeList.add(new HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new com.lewokapps.tmall.HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new com.lewokapps.tmall.HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new com.lewokapps.tmall.HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new com.lewokapps.tmall.HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new com.lewokapps.tmall.HorizontalProductScrollModel("", "", "", "", ""));
+        horizontalProductScrollModelFakeList.add(new com.lewokapps.tmall.HorizontalProductScrollModel("", "", "", "", ""));
 
-        homePageModelFakeList.add(new HomePageModel(0, sliderModelFakeList));
-        homePageModelFakeList.add(new HomePageModel(1, "", "#ffffff"));
-        homePageModelFakeList.add(new HomePageModel(2, "", "#ffffff", horizontalProductScrollModelFakeList, new ArrayList<WishlistModel>()));
-        homePageModelFakeList.add(new HomePageModel(3, "", "#ffffff", horizontalProductScrollModelFakeList));
+        homePageModelFakeList.add(new com.lewokapps.tmall.HomePageModel(0, sliderModelFakeList));
+        homePageModelFakeList.add(new com.lewokapps.tmall.HomePageModel(1, "", "#ffffff"));
+        homePageModelFakeList.add(new com.lewokapps.tmall.HomePageModel(2, "", "#ffffff", horizontalProductScrollModelFakeList, new ArrayList<com.lewokapps.tmall.WishlistModel>()));
+        homePageModelFakeList.add(new com.lewokapps.tmall.HomePageModel(3, "", "#ffffff", horizontalProductScrollModelFakeList));
 
         ///// home page fake list
 
@@ -67,7 +69,7 @@ public class CategoryActivity extends AppCompatActivity {
         categoryRecyclerView.setLayoutManager(testingLayoutManager);
 
 
-        adapter = new HomePageAdapter(homePageModelFakeList);
+        adapter = new com.lewokapps.tmall.HomePageAdapter(homePageModelFakeList);
 
 
         int listPosition = 0;
@@ -83,11 +85,11 @@ public class CategoryActivity extends AppCompatActivity {
         if (listPosition == 0) {
 
             loadedCategoriesNames.add(title.toUpperCase());
-            lists.add(new ArrayList<HomePageModel>());
+            lists.add(new ArrayList<com.lewokapps.tmall.HomePageModel>());
 
             loadFragmentData(categoryRecyclerView, this, loadedCategoriesNames.size() - 1, title);
         } else {
-            adapter = new HomePageAdapter(lists.get(listPosition));
+            adapter = new com.lewokapps.tmall.HomePageAdapter(lists.get(listPosition));
         }
         categoryRecyclerView.setAdapter(adapter);
 

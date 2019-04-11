@@ -1,5 +1,6 @@
 package com.lewokapps.tmall;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -31,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.lewokapps.tmall.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +47,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     public static boolean running_wishlist_query = false;
     public static boolean running_rating_query = false;
     public static boolean running_cart_query = false;
-
+    public static Activity productDetailsActivity;
 
     private TextView productTitle;
     private TextView averageRatingMiniView;
@@ -59,6 +61,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private ViewPager productImagesViewPager;
     private TabLayout viewPagerIndicator;
+
+
     public static boolean ALREADY_ADDED_TO_WISHLIST = false;
     public static FloatingActionButton addToWishlistBtn;
 
@@ -74,7 +78,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private String productDescription;
     private String productOtherDetails;
 
-    private List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
+    private List<com.lewokapps.tmall.ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
 
 
     ///// product description
@@ -226,7 +230,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                     }
 
-                    ProductImagesAdapter productImagesAdapter = new ProductImagesAdapter(productImages);
+                    com.lewokapps.tmall.ProductImagesAdapter productImagesAdapter = new com.lewokapps.tmall.ProductImagesAdapter(productImages);
                     productImagesViewPager.setAdapter(productImagesAdapter);
 
                     productTitle.setText(documentSnapshot.get("product_title").toString());
@@ -264,10 +268,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                         for (long x = 1; x < (long) documentSnapshot.get("total_spec_titles") + 1; x++) {
 
-                            productSpecificationModelList.add(new ProductSpecificationModel(0, documentSnapshot.get("spec_title_" + x).toString()));
+                            productSpecificationModelList.add(new com.lewokapps.tmall.ProductSpecificationModel(0, documentSnapshot.get("spec_title_" + x).toString()));
 
                             for (long y = 1; y < (long) documentSnapshot.get("spec_title_" + x + "_total_fields") + 1; y++) {
-                                productSpecificationModelList.add(new ProductSpecificationModel(1, documentSnapshot.get("spec_title_" + x + "_field_" + y + "_name").toString(),
+                                productSpecificationModelList.add(new com.lewokapps.tmall.ProductSpecificationModel(1, documentSnapshot.get("spec_title_" + x + "_field_" + y + "_name").toString(),
                                         documentSnapshot.get("spec_title_" + x + "_field_" + y + "_value").toString()));
 
                             }
@@ -299,25 +303,25 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                     averageRating.setText(documentSnapshot.get("average_rating").toString());
 
-                    productDetailsViewPager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(), productDetailsTabLayout.getTabCount(), productDescription, productOtherDetails, productSpecificationModelList));
+                    productDetailsViewPager.setAdapter(new com.lewokapps.tmall.ProductDetailsAdapter(getSupportFragmentManager(), productDetailsTabLayout.getTabCount(), productDescription, productOtherDetails, productSpecificationModelList));
 
 
                     if (currentUser != null) {
 
-                        if (DBqueries.myRating.size() == 0) {
+                        if (com.lewokapps.tmall.DBqueries.myRating.size() == 0) {
 
-                            DBqueries.loadRatingList(ProductDetailsActivity.this);
+                            com.lewokapps.tmall.DBqueries.loadRatingList(ProductDetailsActivity.this);
                         }
 
-                        if (DBqueries.cartList.size() == 0) {
+                        if (com.lewokapps.tmall.DBqueries.cartList.size() == 0) {
 
-                            DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false, badgeCount, new TextView(ProductDetailsActivity.this));
+                            com.lewokapps.tmall.DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false, badgeCount, new TextView(ProductDetailsActivity.this));
 
                         }
 
-                        if (DBqueries.wishlist.size() == 0) {
+                        if (com.lewokapps.tmall.DBqueries.wishlist.size() == 0) {
 
-                            DBqueries.loadWishlist(ProductDetailsActivity.this, loadingDialog, false);
+                            com.lewokapps.tmall.DBqueries.loadWishlist(ProductDetailsActivity.this, loadingDialog, false);
 
                         } else {
                             loadingDialog.dismiss();
@@ -328,23 +332,23 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         loadingDialog.dismiss();
                     }
 
-                    if (DBqueries.myRatedIds.contains(productID)) {
+                    if (com.lewokapps.tmall.DBqueries.myRatedIds.contains(productID)) {
 
-                        int index = DBqueries.myRatedIds.indexOf(productID);
+                        int index = com.lewokapps.tmall.DBqueries.myRatedIds.indexOf(productID);
 
-                        initialRating = Integer.parseInt(String.valueOf(DBqueries.myRating.get(index))) - 1;
+                        initialRating = Integer.parseInt(String.valueOf(com.lewokapps.tmall.DBqueries.myRating.get(index))) - 1;
 
                         setRating(initialRating);
                     }
 
-                    if (DBqueries.cartList.contains(productID)) {
+                    if (com.lewokapps.tmall.DBqueries.cartList.contains(productID)) {
 
                         ALREADY_ADDED_TO_CART = true;
                     } else {
                         ALREADY_ADDED_TO_CART = false;
                     }
 
-                    if (DBqueries.wishlist.contains(productID)) {
+                    if (com.lewokapps.tmall.DBqueries.wishlist.contains(productID)) {
 
                         ALREADY_ADDED_TO_WISHLIST = true;
                         addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorAccent));
@@ -372,8 +376,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                         } else {
 
                                             Map<String, Object> addProduct = new HashMap<>();
-                                            addProduct.put("product_ID_" + String.valueOf(DBqueries.cartList.size()), productID);
-                                            addProduct.put("list_size", (long) (DBqueries.cartList.size() + 1));
+                                            addProduct.put("product_ID_" + String.valueOf(com.lewokapps.tmall.DBqueries.cartList.size()), productID);
+                                            addProduct.put("list_size", (long) (com.lewokapps.tmall.DBqueries.cartList.size() + 1));
                                             firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_CART")
 
                                                     .update(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -382,15 +386,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
 
 
-                                                        if (DBqueries.cartItemModelList.size() != 0) {
+                                                        if (com.lewokapps.tmall.DBqueries.cartItemModelList.size() != 0) {
 
-                                                            DBqueries.cartItemModelList.add(0,new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) 0, (long) 0, (boolean) documentSnapshot.get("in_stock")));
+                                                            com.lewokapps.tmall.DBqueries.cartItemModelList.add(0, new com.lewokapps.tmall.CartItemModel(com.lewokapps.tmall.CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) 0, (long) 0, (boolean) documentSnapshot.get("in_stock"), (long) documentSnapshot.get("max-quantity")));
 
                                                         }
 
                                                         ALREADY_ADDED_TO_CART = true;
 
-                                                        DBqueries.cartList.add(productID);
+                                                        com.lewokapps.tmall.DBqueries.cartList.add(productID);
                                                         Toast.makeText(ProductDetailsActivity.this, "Added to cart success", Toast.LENGTH_SHORT).show();
                                                         invalidateOptionsMenu();
                                                         running_cart_query = false;
@@ -451,9 +455,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                         if (ALREADY_ADDED_TO_WISHLIST) {
 
-                            int index = DBqueries.wishlist.indexOf(productID);
+                            int index = com.lewokapps.tmall.DBqueries.wishlist.indexOf(productID);
 
-                            DBqueries.removeFromWishlist(index, ProductDetailsActivity.this);
+                            com.lewokapps.tmall.DBqueries.removeFromWishlist(index, ProductDetailsActivity.this);
 
                             addToWishlistBtn.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
 
@@ -461,8 +465,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                             addToWishlistBtn.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.btnRed)));
 
                             Map<String, Object> addProduct = new HashMap<>();
-                            addProduct.put("product_ID_" + String.valueOf(DBqueries.wishlist.size()), productID);
-                            addProduct.put("list_size", (long) (DBqueries.wishlist.size() + 1));
+                            addProduct.put("product_ID_" + String.valueOf(com.lewokapps.tmall.DBqueries.wishlist.size()), productID);
+                            addProduct.put("list_size", (long) (com.lewokapps.tmall.DBqueries.wishlist.size() + 1));
                             firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_WISHLIST")
 
                                     .update(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -471,16 +475,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
 
 
-                                        if (DBqueries.wishlistModelList.size() != 0) {
+                                        if (com.lewokapps.tmall.DBqueries.wishlistModelList.size() != 0) {
 
-                                            DBqueries.wishlistModelList.add(new WishlistModel(productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("average_rating").toString(), (long) documentSnapshot.get("total_ratings"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (boolean) documentSnapshot.get("COD")));
+                                            com.lewokapps.tmall.DBqueries.wishlistModelList.add(new com.lewokapps.tmall.WishlistModel(productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("average_rating").toString(), (long) documentSnapshot.get("total_ratings"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (boolean) documentSnapshot.get("COD"), (boolean) documentSnapshot.get("in_stock")));
 
                                         }
 
                                         ALREADY_ADDED_TO_WISHLIST = true;
 
                                         addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorAccent));
-                                        DBqueries.wishlist.add(productID);
+                                        com.lewokapps.tmall.DBqueries.wishlist.add(productID);
                                         Toast.makeText(ProductDetailsActivity.this, "Added to wishlist success", Toast.LENGTH_SHORT).show();
 
                                     } else {
@@ -547,7 +551,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                                 Map<String, Object> updateRating = new HashMap<>();
 
-                                if (DBqueries.myRatedIds.contains(productID)) {
+                                if (com.lewokapps.tmall.DBqueries.myRatedIds.contains(productID)) {
 
                                     TextView oldRating = (TextView) ratingsNoContainer.getChildAt(5 - initialRating - 1);
                                     TextView finalRating = (TextView) ratingsNoContainer.getChildAt(5 - startPosition - 1);
@@ -575,22 +579,22 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                                             Map<String, Object> myRating = new HashMap<>();
 
-                                            if (DBqueries.myRatedIds.contains(productID)) {
+                                            if (com.lewokapps.tmall.DBqueries.myRatedIds.contains(productID)) {
 
-                                                myRating.put("rating_" + DBqueries.myRatedIds.indexOf(productID), (long) startPosition + 1);
+                                                myRating.put("rating_" + com.lewokapps.tmall.DBqueries.myRatedIds.indexOf(productID), (long) startPosition + 1);
                                             } else {
-                                                myRating.put("list_size", (long) DBqueries.myRatedIds.size() + 1);
-                                                myRating.put("product_ID_" + DBqueries.myRatedIds.size(), productID);
-                                                myRating.put("rating_" + DBqueries.myRatedIds.size(), (long) startPosition + 1);
+                                                myRating.put("list_size", (long) com.lewokapps.tmall.DBqueries.myRatedIds.size() + 1);
+                                                myRating.put("product_ID_" + com.lewokapps.tmall.DBqueries.myRatedIds.size(), productID);
+                                                myRating.put("rating_" + com.lewokapps.tmall.DBqueries.myRatedIds.size(), (long) startPosition + 1);
                                             }
                                             firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_RATINGS").update(myRating).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
 
-                                                        if (DBqueries.myRatedIds.contains(productID)) {
+                                                        if (com.lewokapps.tmall.DBqueries.myRatedIds.contains(productID)) {
 
-                                                            DBqueries.myRating.set(DBqueries.myRatedIds.indexOf(productID), (long) startPosition + 1);
+                                                            com.lewokapps.tmall.DBqueries.myRating.set(com.lewokapps.tmall.DBqueries.myRatedIds.indexOf(productID), (long) startPosition + 1);
 
                                                             TextView oldRating = (TextView) ratingsNoContainer.getChildAt(5 - initialRating - 1);
                                                             TextView finalRating = (TextView) ratingsNoContainer.getChildAt(5 - startPosition - 1);
@@ -599,8 +603,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                                                         } else {
 
-                                                            DBqueries.myRatedIds.add(productID);
-                                                            DBqueries.myRating.add((long) startPosition + 1);
+                                                            com.lewokapps.tmall.DBqueries.myRatedIds.add(productID);
+                                                            com.lewokapps.tmall.DBqueries.myRating.add((long) startPosition + 1);
 
                                                             TextView rating = (TextView) ratingsNoContainer.getChildAt(5 - startPosition - 1);
                                                             rating.setText(String.valueOf(Integer.parseInt(rating.getText().toString()) + 1));
@@ -673,19 +677,23 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         ///// ratings layout
 
-        buyNowBtn.setOnClickListener(new View.OnClickListener() {
+            buyNowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                loadingDialog.show();
 
                 if (currentUser == null) {
                     signInDialog.show();
                 } else {
-                    DeliveryActivity.cartItemModelList.clear();
-                    DeliveryActivity.cartItemModelList = new ArrayList<>();
 
-                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) 0, (long) 0, (boolean) documentSnapshot.get("in_stock")));
+                    com.lewokapps.tmall.DeliveryActivity.fromCart = false;
+
+                    loadingDialog.show();
+                    productDetailsActivity = ProductDetailsActivity.this;
+
+                    com.lewokapps.tmall.DeliveryActivity.cartItemModelList = new ArrayList<>();
+
+                    com.lewokapps.tmall.DeliveryActivity.cartItemModelList.add(new com.lewokapps.tmall.CartItemModel(com.lewokapps.tmall.CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) 0, (long) 0, (boolean) documentSnapshot.get("in_stock"), (long) documentSnapshot.get("max-quantity")));
 
                     DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
 
@@ -896,7 +904,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private String calculateAverageRating(long currentUserRating, boolean update) {
 
-            Double totalStars = Double.valueOf(0);
+        Double totalStars = Double.valueOf(0);
         for (int x = 1; x < 6; x++) {
 
             TextView ratingNo = (TextView) ratingsNoContainer.getChildAt(5 - x);
@@ -977,7 +985,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
-
+            productDetailsActivity = null;
             finish();
             return true;
         } else if (id == R.id.main_search_icon) {
@@ -998,5 +1006,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        productDetailsActivity = null;
+
+        super.onBackPressed();
     }
 }

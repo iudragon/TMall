@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import static com.lewokapps.tmall.DeliveryActivity.SELECT_ADDRESS;
+
 
 /**
  * A simple {@link Fragment} subclass.
