@@ -2,7 +2,6 @@ package com.lewokapps.tmall;
 
 import android.app.Dialog;
 import android.content.res.ColorStateList;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -20,8 +19,20 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class CartAdapter extends RecyclerView.Adapter {
 
@@ -94,8 +105,12 @@ public class CartAdapter extends RecyclerView.Adapter {
                 boolean inStock = cartItemModelList.get(position).isInStock();
                 Long productQuantity = cartItemModelList.get(position).getProductQuantity();
                 Long maxQuantity = cartItemModelList.get(position).getMaxQuantity();
+                boolean qtyError = cartItemModelList.get(position).isQtyError();
 
-                ((CartItemViewHolder) viewHolder).setItemDetails(productID, resource, title, freeCoupons, productPrice, cuttedPrice, offersApplied, position, inStock, String.valueOf(productQuantity), maxQuantity);
+                List<String> qtyIds = cartItemModelList.get(position).getQtyIDs();
+                long stockQty = cartItemModelList.get(position).getStockQuantity();
+
+                ((CartItemViewHolder) viewHolder).setItemDetails(productID, resource, title, freeCoupons, productPrice, cuttedPrice, offersApplied, position, inStock, String.valueOf(productQuantity), maxQuantity, qtyError, qtyIds, stockQty);
 
                 break;
 
@@ -183,7 +198,7 @@ public class CartAdapter extends RecyclerView.Adapter {
         }
 
 
-        private void setItemDetails(String productID, String resource, String title, Long freeCouponsNo, String productPriceText, String cuttedPriceText, Long offersAppliedNo, final int position, boolean inStock, final String quantity, final Long maxQuantity) {
+        private void setItemDetails(final String productID, String resource, String title, Long freeCouponsNo, String productPriceText, String cuttedPriceText, Long offersAppliedNo, final int position, boolean inStock, final String quantity, final Long maxQuantity, boolean qtyError, final List<String> qtyIds, final long stockQty) {
 
             Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.placeholdericonmini)).into(productImage);
 
@@ -218,6 +233,21 @@ public class CartAdapter extends RecyclerView.Adapter {
 
                 productQuantity.setText("Qty: " + quantity);
 
+                if (!showDeleteBtn) {
+
+                    if (qtyError) {
+
+                        productQuantity.setTextColor(itemView.getContext().getResources().getColor(R.color.colorAccent));
+                        productQuantity.setBackgroundTintList(ColorStateList.valueOf(itemView.getContext().getResources().getColor(R.color.colorAccent)));
+
+                    } else {
+
+
+                        productQuantity.setTextColor(itemView.getContext().getResources().getColor(R.color.colorBlack));
+                        productQuantity.setBackgroundTintList(ColorStateList.valueOf(itemView.getContext().getResources().getColor(R.color.colorBlack)));
+
+                    }
+                }
 
                 productQuantity.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -250,17 +280,130 @@ public class CartAdapter extends RecyclerView.Adapter {
 
                                     if (Long.valueOf(quantityNo.getText().toString()) <= maxQuantity && Long.valueOf(quantityNo.getText().toString()) != 0) {
 
-
-                                        if (DeliveryActivity.fromCart) {
-
-
+                                        if (itemView.getContext() instanceof MainActivity) {
                                             DBqueries.cartItemModelList.get(position).setProductQuantity(Long.parseLong(quantityNo.getText().toString()));
+
+
                                         } else {
 
-                                            DeliveryActivity.cartItemModelList.get(position).setProductQuantity(Long.parseLong(quantityNo.getText().toString()));
+                                            if (DeliveryActivity.fromCart) {
+
+
+                                                DBqueries.cartItemModelList.get(position).setProductQuantity(Long.parseLong(quantityNo.getText().toString()));
+                                            } else {
+
+                                                DeliveryActivity.cartItemModelList.get(position).setProductQuantity(Long.parseLong(quantityNo.getText().toString()));
+                                            }
                                         }
 
+
                                         productQuantity.setText("Qty: " + quantityNo.getText());
+                                        if (!showDeleteBtn) {
+                                            DeliveryActivity.cartItemModelList.get(position).setQtyError(false);
+
+                                            final int initialQty = Integer.parseInt(quantity);
+
+                                            final int finalQty = Integer.parseInt(quantityNo.getText().toString());
+                                            final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+                                            if (finalQty > initialQty) {
+
+                                                for (int y = 0; y < finalQty - initialQty; y++) {
+
+                                                    final String quantityDocumentName = UUID.randomUUID().toString().substring(0, 20);
+
+                                                    Map<String, Object> timeStamp = new HashMap<>();
+                                                    timeStamp.put("time", FieldValue.serverTimestamp());
+
+                                                    final int finalY = y;
+
+                                                    firebaseFirestore.collection("PRODUCTS").document(productID).collection("QUANTITY").document(quantityDocumentName).set(timeStamp).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+
+                                                            qtyIds.add(quantityDocumentName);
+
+
+                                                            if (finalY + 1 == finalQty - initialQty) {
+
+                                                                firebaseFirestore.collection("PRODUCTS").document(productID).collection("QUANTITY").orderBy("time", Query.Direction.ASCENDING).limit(stockQty).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                        if (task.isSuccessful()) {
+
+
+                                                                            List<String> serverQuantity = new ArrayList<>();
+
+                                                                            for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+
+
+                                                                                serverQuantity.add(queryDocumentSnapshot.getId());
+                                                                            }
+
+                                                                            long availableQty = 0;
+
+
+                                                                            for (String qtyId : qtyIds) {
+
+                                                                                if (!serverQuantity.contains(qtyId)) {
+
+
+                                                                                    DeliveryActivity.cartItemModelList.get(position).setQtyError(true);
+                                                                                    DeliveryActivity.cartItemModelList.get(position).setMaxQuantity(availableQty);
+
+                                                                                    Toast.makeText(itemView.getContext(), "HAHA, Products nahi honge kuch jitne chahiye utne", Toast.LENGTH_SHORT).show();
+
+
+                                                                                    DeliveryActivity.allProductsAvailable = false;
+
+
+                                                                                } else {
+
+                                                                                    availableQty++;
+                                                                                }
+
+                                                                            }
+
+                                                                            DeliveryActivity.cartAdapter.notifyDataSetChanged();
+
+                                                                        } else {
+
+                                                                            String error = task.getException().getMessage();
+                                                                            Toast.makeText(itemView.getContext(), error, Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    }
+                                                                });
+
+                                                            }
+
+                                                        }
+                                                    });
+
+                                                }
+                                            } else if (initialQty > finalQty) {
+
+
+                                                for (int x = 0; x < initialQty - finalQty; x++) {
+
+                                                    final String qtyId = qtyIds.get(qtyIds.size() - 1 - x);
+
+                                                    firebaseFirestore.collection("PRODUCTS").document(productID).collection("QUANTITY").document(qtyId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            qtyIds.remove(qtyId);
+                                                            DeliveryActivity.cartAdapter.notifyDataSetChanged();
+
+                                                        }
+                                                    });
+
+
+                                                }
+
+
+                                            }
+
+                                        }
+
                                     } else {
 
                                         Toast.makeText(itemView.getContext(), "Max quantity: " + maxQuantity.toString(), Toast.LENGTH_SHORT).show();
@@ -358,7 +501,18 @@ public class CartAdapter extends RecyclerView.Adapter {
 
             LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
             if (totalItemPriceText == 0) {
-                DBqueries.cartItemModelList.remove(DBqueries.cartItemModelList.size() - 1);
+
+                if (DeliveryActivity.fromCart) {
+
+                    DBqueries.cartItemModelList.remove(DBqueries.cartItemModelList.size() - 1);
+                    DeliveryActivity.cartItemModelList.remove(DeliveryActivity.cartItemModelList.size() - 1);
+                }
+
+                if (showDeleteBtn){
+                    DBqueries.cartItemModelList.remove(DBqueries.cartItemModelList.size() - 1);
+
+
+                }
                 parent.setVisibility(View.GONE);
 
             } else {

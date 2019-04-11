@@ -27,8 +27,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
-
 import static com.lewokapps.tmall.RegisterActivity.onResetPasswordFragment;
 
 

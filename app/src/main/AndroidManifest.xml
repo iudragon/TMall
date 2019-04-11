@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.lewokapps.tmall">
-
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,6 +21,7 @@
         <activity
             android:name=".AddAddressActivity"
             android:theme="@style/RedProgressbar" />
+        <activity android:name=".DeliveryActivity" />
         <activity android:name=".OrderDetailsActivity" />
         <activity android:name=".ProductDetailsActivity" />
         <activity android:name=".CategoryActivity" />
