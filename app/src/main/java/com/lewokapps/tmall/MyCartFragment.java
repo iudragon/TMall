@@ -68,7 +68,6 @@ public class MyCartFragment extends Fragment {
         cartItemsRecyclerView.setLayoutManager(layoutManager);
 
 
-
         cartAdapter = new CartAdapter(DBqueries.cartItemModelList, totalAmount, true);
         cartItemsRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
@@ -115,11 +114,19 @@ public class MyCartFragment extends Fragment {
 
         cartAdapter.notifyDataSetChanged();
 
+        if (DBqueries.rewardModelList.size() == 0) {
+            loadingDialog.show();
+            DBqueries.loadRewards(getContext(), loadingDialog, false);
+        }
+
         if (DBqueries.cartItemModelList.size() == 0) {
 
             DBqueries.cartList.clear();
 
             DBqueries.loadCartList(getContext(), loadingDialog, true, new TextView(getContext()), totalAmount);
+
+
+
         } else {
             if (DBqueries.cartItemModelList.get(DBqueries.cartItemModelList.size() - 1).getType() == CartItemModel.TOTAL_AMOUNT) {
 

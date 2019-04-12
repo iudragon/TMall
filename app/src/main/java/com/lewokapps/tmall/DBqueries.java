@@ -581,14 +581,16 @@ public class DBqueries {
                                                 documentSnapshot.get("upper_limit").toString(),
                                                 documentSnapshot.get("percentage").toString(),
                                                 documentSnapshot.get("body").toString(),
-                                                (Date) documentSnapshot.getTimestamp("validity").toDate()));
+                                                (Date) documentSnapshot.getTimestamp("validity").toDate(),
+                                                (boolean) documentSnapshot.get("already_used")));
                                     } else if (documentSnapshot.get("type").toString().equals("FlatRsOff") && lastseenDate.before(documentSnapshot.getDate("validity"))) {
                                         rewardModelList.add(new RewardModel(documentSnapshot.get("type").toString(),
                                                 documentSnapshot.get("lower_limit").toString(),
                                                 documentSnapshot.get("upper_limit").toString(),
                                                 documentSnapshot.get("amount").toString(),
                                                 documentSnapshot.get("body").toString(),
-                                                (Date) documentSnapshot.getTimestamp("validity").toDate()));
+                                                (Date) documentSnapshot.getTimestamp("validity").toDate(),
+                                                (boolean) documentSnapshot.get("already_used")));
                                     }
                                 }
 

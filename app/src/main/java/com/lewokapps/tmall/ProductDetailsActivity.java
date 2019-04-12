@@ -216,6 +216,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         ///// loading dialog
 
+        /// coupon dialog
         final Dialog checkCouponPriceDialog = new Dialog(ProductDetailsActivity.this);
         checkCouponPriceDialog.setContentView(R.layout.coupon_redeem_dialog);
         checkCouponPriceDialog.setCancelable(true);
@@ -237,16 +238,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(ProductDetailsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         couponsRecyclerView.setLayoutManager(layoutManager);
-
-
-
-
         toggleRecyclerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDialogRecyclerView();
             }
         });
+        /// coupon dialog
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -280,11 +278,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                 totalRatingMiniView.setText("(" + documentSnapshot.get("total_ratings") + ")ratings");
 
                                 productPrice.setText("Rs. " + documentSnapshot.get("product_price").toString() + "/-");
-                                productOriginalPrice = documentSnapshot.get("product_price").toString();
+
 
                                 /// for coupon dialog
                                 originalPrice.setText(productPrice.getText());
-
+                                productOriginalPrice = documentSnapshot.get("product_price").toString();
                                 MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(DBqueries.rewardModelList, true, couponsRecyclerView, selectedCoupon, productOriginalPrice, couponTitle, couponExpiryDate, couponBody, discountPrice);
                                 couponsRecyclerView.setAdapter(myRewardsAdapter);
                                 myRewardsAdapter.notifyDataSetChanged();
