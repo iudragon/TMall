@@ -123,7 +123,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TextView couponBody;
     private RecyclerView couponsRecyclerView;
     private LinearLayout selectedCoupon;
-    private TextView discountPrice;
+    private TextView discountedPrice;
     private TextView originalPrice;
     ///// coupon dialog
 
@@ -137,7 +137,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private TextView badgeCount;
 
-    private boolean inStock;
+    private boolean inStock = false;
 
     private DocumentSnapshot documentSnapshot;
 
@@ -232,7 +232,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
 
         originalPrice = checkCouponPriceDialog.findViewById(R.id.original_price);
-        discountPrice = checkCouponPriceDialog.findViewById(R.id.discount_price);
+        discountedPrice = checkCouponPriceDialog.findViewById(R.id.discount_price);
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(ProductDetailsActivity.this);
@@ -283,7 +283,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                 /// for coupon dialog
                                 originalPrice.setText(productPrice.getText());
                                 productOriginalPrice = documentSnapshot.get("product_price").toString();
-                                MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(DBqueries.rewardModelList, true, couponsRecyclerView, selectedCoupon, productOriginalPrice, couponTitle, couponExpiryDate, couponBody, discountPrice);
+                                MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(DBqueries.rewardModelList, true, couponsRecyclerView, selectedCoupon, productOriginalPrice, couponTitle, couponExpiryDate, couponBody, discountedPrice);
                                 couponsRecyclerView.setAdapter(myRewardsAdapter);
                                 myRewardsAdapter.notifyDataSetChanged();
                                 /// for coupon dialog
@@ -417,6 +417,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                                     inStock = true;
 
+                                    buyNowBtn.setVisibility(View.VISIBLE);
+
                                     addToCartBtn.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -447,7 +449,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                                                                     if (DBqueries.cartItemModelList.size() != 0) {
 
-                                                                        DBqueries.cartItemModelList.add(0, new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) 0, (long) 0, inStock, (long) documentSnapshot.get("max-quantity"), (long) documentSnapshot.get("stock_quantity")));
+                                                                        DBqueries.cartItemModelList.add(0, new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) documentSnapshot.get("offers_applied"), (long) 0, inStock, (long) documentSnapshot.get("max-quantity"), (long) documentSnapshot.get("stock_quantity")));
 
                                                                     }
 
@@ -762,7 +764,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                     DeliveryActivity.cartItemModelList = new ArrayList<>();
 
-                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) 0, (long) 0, inStock, (long) documentSnapshot.get("max-quantity"), (long) documentSnapshot.get("stock_quantity")));
+                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) documentSnapshot.get("offers_applied"), (long) 0, inStock, (long) documentSnapshot.get("max-quantity"), (long) documentSnapshot.get("stock_quantity")));
 
                     DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
 
@@ -857,10 +859,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                 DBqueries.loadWishlist(ProductDetailsActivity.this, loadingDialog, false);
 
+            }
 
-            } else {
+            if (DBqueries.rewardModelList.size() == 0) {
+                DBqueries.loadRewards(ProductDetailsActivity.this, loadingDialog, false);
+            }
+
+            if (DBqueries.cartList.size() != 0 && DBqueries.wishlist.size() != 0 && DBqueries.rewardModelList.size() != 0) {
                 loadingDialog.dismiss();
             }
+
 
         } else {
             loadingDialog.dismiss();

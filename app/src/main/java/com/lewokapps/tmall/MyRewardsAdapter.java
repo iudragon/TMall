@@ -30,6 +30,7 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
     private TextView selectedCouponBody;
     private TextView discountedPrice;
     private int cartItemPosition = -1;
+    private List<CartItemModel> cartItemModelList;
 
     public MyRewardsAdapter(List<RewardModel> rewardModelList, Boolean useMiniLayout) {
         this.rewardModelList = rewardModelList;
@@ -49,7 +50,7 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
         this.discountedPrice = discountedPrice;
     }
 
-    public MyRewardsAdapter(int cartItemPosition, List<RewardModel> rewardModelList, Boolean useMiniLayout, RecyclerView couponsRecyclerView, LinearLayout selectedCoupon, String productOriginalPrice, TextView couponTitle, TextView couponExpiryDate, TextView couponBody, TextView discountedPrice) {
+    public MyRewardsAdapter(int cartItemPosition, List<RewardModel> rewardModelList, Boolean useMiniLayout, RecyclerView couponsRecyclerView, LinearLayout selectedCoupon, String productOriginalPrice, TextView couponTitle, TextView couponExpiryDate, TextView couponBody, TextView discountedPrice, List<CartItemModel> cartItemModelList) {
         this.rewardModelList = rewardModelList;
         this.useMiniLayout = useMiniLayout;
         this.couponsRecyclerView = couponsRecyclerView;
@@ -60,6 +61,7 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
         this.selectedCouponBody = couponBody;
         this.discountedPrice = discountedPrice;
         this.cartItemPosition = cartItemPosition;
+        this.cartItemModelList = cartItemModelList;
     }
 
 
@@ -163,13 +165,13 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
                                 }
 
                                 if (cartItemPosition != -1){
-                                    DBqueries.cartItemModelList.get(cartItemPosition).setSelectedCouponId(couponId);
+                                    cartItemModelList.get(cartItemPosition).setSelectedCouponId(couponId);
                                 }
 
                             } else {
 
                                 if (cartItemPosition != -1){
-                                    DBqueries.cartItemModelList.get(cartItemPosition).setSelectedCouponId(null);
+                                    cartItemModelList.get(cartItemPosition).setSelectedCouponId(null);
 
                                 }
 

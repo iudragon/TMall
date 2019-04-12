@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -64,7 +65,7 @@ public class DeliveryActivity extends AppCompatActivity {
     private TextView fullAddress;
     private TextView pincode;
     private Button continueBtn;
-    private Dialog loadingDialog;
+    public static Dialog loadingDialog;
     private Dialog paymentMethodDialog;
     private ImageButton paytm, cod;
     private ConstraintLayout orderConfirmationLayout;
@@ -75,7 +76,6 @@ public class DeliveryActivity extends AppCompatActivity {
     private String order_id;
     public static boolean codOrderConfirmed = false;
     private FirebaseFirestore firebaseFirestore;
-    public static boolean allProductsAvailable;
     public static boolean getQtyIDs = true;
 
 
@@ -83,6 +83,8 @@ public class DeliveryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -137,7 +139,6 @@ public class DeliveryActivity extends AppCompatActivity {
 
         getQtyIDs = true;
 
-        allProductsAvailable = true;
 
         order_id = UUID.randomUUID().toString().substring(0, 28);
 
@@ -171,13 +172,15 @@ public class DeliveryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Boolean allProductsAvailable = true;
+                for (CartItemModel cartItemModel : cartItemModelList) {
+                    if (cartItemModel.isQtyError()) {
+                        allProductsAvailable = false;
+                    }
+                }
                 if (allProductsAvailable) {
                     paymentMethodDialog.show();
-                } else {
-
-
                 }
-
             }
         });
 
@@ -388,7 +391,6 @@ public class DeliveryActivity extends AppCompatActivity {
 
                                                         }
 
-                                                        allProductsAvailable = false;
 
                                                     } else {
                                                         availableQty++;
@@ -632,5 +634,15 @@ public class DeliveryActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void placeOrderDetails() {
+        loadingDialog.show();
+        for (CartItemModel cartItemModel : cartItemModelList) {
+            if (cartItemModel.getType() == CartItemModel.CART_ITEM) {
+
+                firebaseFirestore.collection("ORDERS").document(order_id).collection("OrderItems").document(cartItemModel.getProductID());
+            }
+        }
     }
 }

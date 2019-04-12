@@ -100,7 +100,8 @@
             android:text="BUY NOW"
             android:textColor="#ffffff"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
 
     </LinearLayout>
