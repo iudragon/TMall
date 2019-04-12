@@ -29,7 +29,7 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
     private TextView selectedCouponExpiryDate;
     private TextView selectedCouponBody;
     private TextView discountedPrice;
-    private int cartItemPosition;
+    private int cartItemPosition = -1;
 
     public MyRewardsAdapter(List<RewardModel> rewardModelList, Boolean useMiniLayout) {
         this.rewardModelList = rewardModelList;
@@ -102,14 +102,14 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView couponTitle;
-        private TextView couponExpirydDate;
+        private TextView couponExpiryDate;
         private TextView couponBody;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             couponTitle = itemView.findViewById(R.id.coupon_title);
-            couponExpirydDate = itemView.findViewById(R.id.coupon_validity);
+            couponExpiryDate = itemView.findViewById(R.id.coupon_validity);
             couponBody = itemView.findViewById(R.id.coupon_body);
 
         }
@@ -127,17 +127,17 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
 
             if (alreadyUsed) {
 
-                couponExpirydDate.setText("Already Used");
-                couponExpirydDate.setTextColor(itemView.getContext().getResources().getColor(R.color.btnRed));
+                couponExpiryDate.setText("Already Used");
+                couponExpiryDate.setTextColor(itemView.getContext().getResources().getColor(R.color.btnRed));
                 couponBody.setTextColor(Color.parseColor("#50ffffff"));
                 couponTitle.setTextColor(Color.parseColor("#50ffffff"));
 
             } else {
                 couponBody.setTextColor(Color.parseColor("#ffffff"));
                 couponTitle.setTextColor(Color.parseColor("#ffffff"));
-                couponExpirydDate.setTextColor(itemView.getContext().getResources().getColor(R.color.colorPurple));
+                couponExpiryDate.setTextColor(itemView.getContext().getResources().getColor(R.color.colorPurple));
 
-                couponExpirydDate.setText("till " + simpleDateFormat.format(validity));
+                couponExpiryDate.setText("till " + simpleDateFormat.format(validity));
             }
             couponBody.setText(body);
 
@@ -162,10 +162,16 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
 
                                 }
 
-                                DBqueries.cartItemModelList.get(cartItemPosition).setSelectedCouponId(couponId);
+                                if (cartItemPosition != -1){
+                                    DBqueries.cartItemModelList.get(cartItemPosition).setSelectedCouponId(couponId);
+                                }
 
                             } else {
-                                DBqueries.cartItemModelList.get(cartItemPosition).setSelectedCouponId(null);
+
+                                if (cartItemPosition != -1){
+                                    DBqueries.cartItemModelList.get(cartItemPosition).setSelectedCouponId(null);
+
+                                }
 
                                 discountedPrice.setText("Invalid");
                                 Toast.makeText(itemView.getContext(), "Product does not matches the coupon terms", Toast.LENGTH_SHORT).show();

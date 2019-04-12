@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,7 +127,6 @@ public class MyCartFragment extends Fragment {
             DBqueries.loadCartList(getContext(), loadingDialog, true, new TextView(getContext()), totalAmount);
 
 
-
         } else {
             if (DBqueries.cartItemModelList.get(DBqueries.cartItemModelList.size() - 1).getType() == CartItemModel.TOTAL_AMOUNT) {
 
@@ -137,5 +137,19 @@ public class MyCartFragment extends Fragment {
         }
 
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        for (CartItemModel cartItemModel : DBqueries.cartItemModelList) {
+            if (!TextUtils.isEmpty(cartItemModel.getSelectedCouponId())) {
+                for (RewardModel rewardModel : DBqueries.rewardModelList) {
+                    if (rewardModel.getCouponId().equals(cartItemModel.getSelectedCouponId())) {
+                        rewardModel.setAlreadyUsed(false);
+                    }
+                }
+            }
+        }
     }
 }
