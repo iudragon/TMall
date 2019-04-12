@@ -446,7 +446,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
 
                 productTitle.setText(horizontalProductScrollModelList.get(x).getProductTitle());
                 productDescription.setText(horizontalProductScrollModelList.get(x).getProductDescription());
-                productPrice.setText("Rs. " + horizontalProductScrollModelList.get(x).getProductPrice() + "/-");
+                productPrice.setText("Rs." + horizontalProductScrollModelList.get(x).getProductPrice() + "/-");
                 gridProductLayout.getChildAt(x).setBackgroundColor(itemView.getContext().getResources().getColor(R.color.btnRed));
 
 

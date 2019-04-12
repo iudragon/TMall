@@ -397,12 +397,12 @@ public class DBqueries {
 
                                                     if (task.getResult().getDocuments().size() < (long) documentSnapshot.get("stock_quantity")) {
 
-                                                        cartItemModelList.add(index, new CartItemModel(CartItemModel.CART_ITEM, productId, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) 0, (long) 0, true, (long) documentSnapshot.get("max-quantity"), (long) documentSnapshot.get("stock_quantity")));
+                                                        cartItemModelList.add(index, new CartItemModel(CartItemModel.CART_ITEM, productId, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) documentSnapshot.get("offers_applied"), (long) 0, true, (long) documentSnapshot.get("max-quantity"), (long) documentSnapshot.get("stock_quantity")));
 
 
                                                     } else {
 
-                                                        cartItemModelList.add(index, new CartItemModel(CartItemModel.CART_ITEM, productId, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) 0, (long) 0, false, (long) documentSnapshot.get("max-quantity"), (long) documentSnapshot.get("stock_quantity")));
+                                                        cartItemModelList.add(index, new CartItemModel(CartItemModel.CART_ITEM, productId, documentSnapshot.get("product_image_1").toString(), documentSnapshot.get("product_title").toString(), (long) documentSnapshot.get("free_coupons"), documentSnapshot.get("product_price").toString(), documentSnapshot.get("cutted_price").toString(), (long) 1, (long) documentSnapshot.get("offers_applied"), (long) 0, false, (long) documentSnapshot.get("max-quantity"), (long) documentSnapshot.get("stock_quantity")));
 
 
                                                     }
@@ -576,7 +576,7 @@ public class DBqueries {
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
 
                                     if (documentSnapshot.get("type").toString().equals("Discount") && lastseenDate.before(documentSnapshot.getDate("validity"))) {
-                                        rewardModelList.add(new RewardModel(documentSnapshot.get("type").toString(),
+                                        rewardModelList.add(new RewardModel(documentSnapshot.getId(), documentSnapshot.get("type").toString(),
                                                 documentSnapshot.get("lower_limit").toString(),
                                                 documentSnapshot.get("upper_limit").toString(),
                                                 documentSnapshot.get("percentage").toString(),
@@ -584,7 +584,7 @@ public class DBqueries {
                                                 (Date) documentSnapshot.getTimestamp("validity").toDate(),
                                                 (boolean) documentSnapshot.get("already_used")));
                                     } else if (documentSnapshot.get("type").toString().equals("FlatRsOff") && lastseenDate.before(documentSnapshot.getDate("validity"))) {
-                                        rewardModelList.add(new RewardModel(documentSnapshot.get("type").toString(),
+                                        rewardModelList.add(new RewardModel(documentSnapshot.getId(), documentSnapshot.get("type").toString(),
                                                 documentSnapshot.get("lower_limit").toString(),
                                                 documentSnapshot.get("upper_limit").toString(),
                                                 documentSnapshot.get("amount").toString(),

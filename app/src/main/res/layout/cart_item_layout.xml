@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Rs. 59999 /-"
+        android:text="Rs.59999/-"
         android:textColor="#000000"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -71,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="Rs. 69999/-"
+        android:text="Rs.69999/-"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/product_price"
         app:layout_constraintEnd_toStartOf="@+id/product_price" />
@@ -94,6 +94,7 @@
         android:text="Offers Applied"
         android:textColor="@color/colorPrimary"
         android:textSize="12sp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/product_price" />
 
@@ -105,6 +106,7 @@
         android:text="Coupons Applied"
         android:textColor="@color/colorAccent"
         android:textSize="12sp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/offers_applied" />
 
@@ -143,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Check Price after coupon redemption"
+            android:text="Apply your coupon here"
             android:textAlignment="center"
             android:textColor="#ffffff" />
 

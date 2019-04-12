@@ -277,7 +277,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                                 totalRatingMiniView.setText("(" + documentSnapshot.get("total_ratings") + ")ratings");
 
-                                productPrice.setText("Rs. " + documentSnapshot.get("product_price").toString() + "/-");
+                                productPrice.setText("Rs." + documentSnapshot.get("product_price").toString() + "/-");
 
 
                                 /// for coupon dialog
@@ -288,7 +288,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                 myRewardsAdapter.notifyDataSetChanged();
                                 /// for coupon dialog
 
-                                cuttedPrice.setText("Rs. " + documentSnapshot.get("cutted_price").toString() + "/-");
+                                cuttedPrice.setText("Rs." + documentSnapshot.get("cutted_price").toString() + "/-");
 
 
                                 if ((boolean) documentSnapshot.get("COD")) {

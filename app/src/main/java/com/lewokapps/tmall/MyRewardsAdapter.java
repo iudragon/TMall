@@ -29,6 +29,7 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
     private TextView selectedCouponExpiryDate;
     private TextView selectedCouponBody;
     private TextView discountedPrice;
+    private int cartItemPosition;
 
     public MyRewardsAdapter(List<RewardModel> rewardModelList, Boolean useMiniLayout) {
         this.rewardModelList = rewardModelList;
@@ -46,6 +47,19 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
         this.selectedCouponExpiryDate = couponExpiryDate;
         this.selectedCouponBody = couponBody;
         this.discountedPrice = discountedPrice;
+    }
+
+    public MyRewardsAdapter(int cartItemPosition, List<RewardModel> rewardModelList, Boolean useMiniLayout, RecyclerView couponsRecyclerView, LinearLayout selectedCoupon, String productOriginalPrice, TextView couponTitle, TextView couponExpiryDate, TextView couponBody, TextView discountedPrice) {
+        this.rewardModelList = rewardModelList;
+        this.useMiniLayout = useMiniLayout;
+        this.couponsRecyclerView = couponsRecyclerView;
+        this.selectedCoupon = selectedCoupon;
+        this.productOriginalPrice = productOriginalPrice;
+        this.selectedCouponTitle = couponTitle;
+        this.selectedCouponExpiryDate = couponExpiryDate;
+        this.selectedCouponBody = couponBody;
+        this.discountedPrice = discountedPrice;
+        this.cartItemPosition = cartItemPosition;
     }
 
 
@@ -68,6 +82,7 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
     @Override
     public void onBindViewHolder(@NonNull MyRewardsAdapter.ViewHolder viewHolder, int position) {
 
+        String couponId = rewardModelList.get(position).getCouponId();
         String type = rewardModelList.get(position).getType();
         Date validity = rewardModelList.get(position).getTimestamp();
         String body = rewardModelList.get(position).getCouponBody();
@@ -76,7 +91,7 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
         String discORamt = rewardModelList.get(position).getDiscORamt();
         Boolean alreadyUsed = rewardModelList.get(position).getAlreadyUsed();
 
-        viewHolder.setData(type, validity, body, upperLimit, lowerLimit, discORamt, alreadyUsed);
+        viewHolder.setData(couponId, type, validity, body, upperLimit, lowerLimit, discORamt, alreadyUsed);
     }
 
     @Override
@@ -99,7 +114,7 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
 
         }
 
-        private void setData(final String type, final Date validity, final String body, final String upperLimit, final String lowerLimit, final String discORamt, final boolean alreadyUsed) {
+        private void setData(final String couponId, final String type, final Date validity, final String body, final String upperLimit, final String lowerLimit, final String discORamt, final boolean alreadyUsed) {
 
             if (type.equals("Discount")) {
 
@@ -110,7 +125,7 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
 
             final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/YYYY");
 
-            if (alreadyUsed){
+            if (alreadyUsed) {
 
                 couponExpirydDate.setText("Already Used");
                 couponExpirydDate.setTextColor(itemView.getContext().getResources().getColor(R.color.btnRed));
@@ -141,13 +156,17 @@ public class MyRewardsAdapter extends RecyclerView.Adapter<MyRewardsAdapter.View
 
                                 if (type.equals("Discount")) {
                                     Long discountAmount = Long.valueOf(productOriginalPrice) * Long.valueOf(discORamt) / 100;
-                                    discountedPrice.setText("Rs." + String.valueOf(Long.valueOf(productOriginalPrice) - discountAmount) + " /-");
+                                    discountedPrice.setText("Rs." + String.valueOf(Long.valueOf(productOriginalPrice) - discountAmount) + "/-");
                                 } else {
-                                    discountedPrice.setText("Rs." + String.valueOf(Long.valueOf(productOriginalPrice) - Long.valueOf(discORamt)) + " /-");
+                                    discountedPrice.setText("Rs." + String.valueOf(Long.valueOf(productOriginalPrice) - Long.valueOf(discORamt)) + "/-");
 
                                 }
 
+                                DBqueries.cartItemModelList.get(cartItemPosition).setSelectedCouponId(couponId);
+
                             } else {
+                                DBqueries.cartItemModelList.get(cartItemPosition).setSelectedCouponId(null);
+
                                 discountedPrice.setText("Invalid");
                                 Toast.makeText(itemView.getContext(), "Product does not matches the coupon terms", Toast.LENGTH_SHORT).show();
                             }

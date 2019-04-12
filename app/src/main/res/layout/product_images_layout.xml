@@ -106,7 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Rs. 69999 /-"
+        android:text="Rs.69999/-"
         android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -118,7 +118,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Rs. 59999 /-"
+        android:text="Rs.59999/-"
         app:layout_constraintBottom_toBottomOf="@+id/product_price"
         app:layout_constraintStart_toEndOf="@+id/product_price" />
 
