@@ -190,10 +190,54 @@ public class CartItemModel {
 
     ///// cart item
 
+    private int totalItems;
+    private int totalItemPrice;
+    private int totalAmount;
+    private int savedAmount;
+    private String deliveryPrice;
 
     public CartItemModel(int type) {
         this.type = type;
     }
 
-    ///// cart item
+    public int getTotalItems() {
+        return totalItems;
+    }
+
+    public void setTotalItems(int totalItems) {
+        this.totalItems = totalItems;
+    }
+
+    public int getTotalItemPrice() {
+        return totalItemPrice;
+    }
+
+    public void setTotalItemPrice(int totalItemPrice) {
+        this.totalItemPrice = totalItemPrice;
+    }
+
+    public int getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(int totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public int getSavedAmount() {
+        return savedAmount;
+    }
+
+    public void setSavedAmount(int savedAmount) {
+        this.savedAmount = savedAmount;
+    }
+
+    public String getDeliveryPrice() {
+        return deliveryPrice;
+    }
+
+    public void setDeliveryPrice(String deliveryPrice) {
+        this.deliveryPrice = deliveryPrice;
+    }
+///// cart item
 }
