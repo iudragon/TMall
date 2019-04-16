@@ -55,6 +55,8 @@ public class DBqueries {
 
     public static List<RewardModel> rewardModelList = new ArrayList<>();
 
+    public static List<MyOrderItemModel> myOrderItemModelList = new ArrayList<>();
+
     public static void loadCategories(final RecyclerView categoryRecyclerView, final Context context) {
 
         categoryModelList.clear();
@@ -617,6 +619,49 @@ public class DBqueries {
         });
 
 
+    }
+
+    public static void loadOrders(final Context context) {
+        myOrderItemModelList.clear();
+        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_ORDERS").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+                        firebaseFirestore.collection("ORDERS").document(documentSnapshot.getString("order_id")).collection("OrderItems").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()){
+                                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+
+                                        firebaseFirestore.collection("PRODUCTS").document(documentSnapshot.getString("Product Id")).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+
+                                                } else {
+
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                } else {
+                                    String error = task.getException().getMessage();
+                                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+
+                } else {
+
+                    String error = task.getException().getMessage();
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public static void clearData() {

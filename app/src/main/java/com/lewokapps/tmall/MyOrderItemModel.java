@@ -2,6 +2,7 @@ package com.lewokapps.tmall;
 
 public class MyOrderItemModel {
 
+    private String productId;
 
     private int productImage;
     private String productTitle;

@@ -555,7 +555,12 @@ public class DeliveryActivity extends AppCompatActivity {
 
 
                 }
-                orderDetails.put("Date", FieldValue.serverTimestamp());
+                orderDetails.put("Ordered date", FieldValue.serverTimestamp());
+                orderDetails.put("Packed date", FieldValue.serverTimestamp());
+                orderDetails.put("Shipped date", FieldValue.serverTimestamp());
+                orderDetails.put("Delivered date", FieldValue.serverTimestamp());
+                orderDetails.put("Cancelled date", FieldValue.serverTimestamp());
+                orderDetails.put("Order Status", "Ordered");
                 orderDetails.put("Payment Method", paymentMethod);
                 orderDetails.put("Address", fullAddress.getText());
                 orderDetails.put("FullName", fullname.getText());
@@ -659,11 +664,22 @@ public class DeliveryActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+                                                Map<String, Object> userOrder = new HashMap<>();
+                                                userOrder.put("order_id", order_id);
+                                                firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_ORDERS").document(order_id).set(userOrder).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()){
+                                                            showConfirmationLayout();
 
-                                                showConfirmationLayout();
+                                                        } else {
+                                                            Toast.makeText(DeliveryActivity.this, "failed to update user order list", Toast.LENGTH_LONG).show();
+
+                                                        }
+                                                    }
+                                                });
 
                                             } else {
-                                                Toast.makeText(DeliveryActivity.this, "Order Cancelled", Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     });
