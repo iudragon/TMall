@@ -621,31 +621,29 @@ public class DBqueries {
 
     }
 
-    public static void loadOrders(final Context context) {
+    public static void loadOrders(final Context context, final MyOrderAdapter myOrderAdapter) {
         myOrderItemModelList.clear();
         firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_ORDERS").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
                         firebaseFirestore.collection("ORDERS").document(documentSnapshot.getString("order_id")).collection("OrderItems").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()){
-                                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+                                if (task.isSuccessful()) {
+                                    for (DocumentSnapshot orderItems : task.getResult().getDocuments()) {
 
-                                        firebaseFirestore.collection("PRODUCTS").document(documentSnapshot.getString("Product Id")).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()){
+                                        final MyOrderItemModel myOrderItemModel = new MyOrderItemModel(orderItems.getString("Product id"), orderItems.getString("Product Image"),orderItems.getString("Product Title"),orderItems.getString("Address"),orderItems.getString("Order Status"),  orderItems.getString("Coupon id"), orderItems.getString("Cutted Price"), orderItems.getDate("Ordered Date"), orderItems.getDate("Packed Date"), orderItems.getDate("Shipped Date"), orderItems.getDate("Delivered Date"), orderItems.getDate("Cancelled Date"), orderItems.getString("Discounted Price"), orderItems.getLong("Free Coupons"), orderItems.getString("FullName"), orderItems.getString("ORDER ID"), orderItems.getString("Payment Method"), orderItems.getString("Pincode"), orderItems.getString("Product Price"), orderItems.getLong("Product Quantity"), orderItems.getString("User id"));
 
-                                                } else {
 
-                                                }
-                                            }
-                                        });
+                                        myOrderItemModelList.add(myOrderItemModel);
+
+
                                     }
+
+                                    myOrderAdapter.notifyDataSetChanged();
 
                                 } else {
                                     String error = task.getException().getMessage();

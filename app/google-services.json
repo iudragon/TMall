@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "639046720411",
-    "firebase_url": "https://gecacanteen.firebaseio.com",
-    "project_id": "gecacanteen",
-    "storage_bucket": "gecacanteen.appspot.com"
+    "project_number": "778250730693",
+    "firebase_url": "https://mymallapp.firebaseio.com",
+    "project_id": "mymallapp",
+    "storage_bucket": "mymallapp.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:639046720411:android:3afe43dc7e358a2f",
+        "mobilesdk_app_id": "1:778250730693:android:eb5de37ffc3873ea",
         "android_client_info": {
-          "package_name": "com.lewokapps.gecacanteen"
+          "package_name": "com.lewokapps.tmall"
         }
       },
       "oauth_client": [
         {
-          "client_id": "639046720411-o435i13gebtcntr38se89om6ecfafel3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.lewokapps.gecacanteen",
-            "certificate_hash": "cd4aec4bbc49b01b6792f92a44cc1334bc6dad99"
-          }
-        },
-        {
-          "client_id": "639046720411-b9g00k591a0t538s05j32nctc5htejm8.apps.googleusercontent.com",
+          "client_id": "778250730693-jgivrh8sckj64fube9its3u53bcq0dbs.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA1gsflwUTm8RYCpM9cRTB-l7jJ0pmd9hQ"
+          "current_key": "AIzaSyBrhMvi7qWp1uizR43pC23iuRUPNLVjUlE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "639046720411-b9g00k591a0t538s05j32nctc5htejm8.apps.googleusercontent.com",
+              "client_id": "778250730693-jgivrh8sckj64fube9its3u53bcq0dbs.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -45,27 +37,93 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:639046720411:android:eb5de37ffc3873ea",
+        "mobilesdk_app_id": "1:778250730693:android:2d61a90258570e4a",
         "android_client_info": {
-          "package_name": "com.lewokapps.tmall"
+          "package_name": "com.lewokapps.tquotes"
         }
       },
       "oauth_client": [
         {
-          "client_id": "639046720411-b9g00k591a0t538s05j32nctc5htejm8.apps.googleusercontent.com",
+          "client_id": "778250730693-jgivrh8sckj64fube9its3u53bcq0dbs.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA1gsflwUTm8RYCpM9cRTB-l7jJ0pmd9hQ"
+          "current_key": "AIzaSyBrhMvi7qWp1uizR43pC23iuRUPNLVjUlE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "639046720411-b9g00k591a0t538s05j32nctc5htejm8.apps.googleusercontent.com",
+              "client_id": "778250730693-jgivrh8sckj64fube9its3u53bcq0dbs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778250730693:android:8aef4d6592ea1cc8",
+        "android_client_info": {
+          "package_name": "dragon.bakuman.iu.geca"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778250730693-jgivrh8sckj64fube9its3u53bcq0dbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrhMvi7qWp1uizR43pC23iuRUPNLVjUlE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778250730693-jgivrh8sckj64fube9its3u53bcq0dbs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778250730693:android:d8165e275f495b38",
+        "android_client_info": {
+          "package_name": "dragon.bakuman.iu.mymallapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778250730693-v3efopdmievdl2f7rc1kc3kqtngsgdec.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dragon.bakuman.iu.mymallapp",
+            "certificate_hash": "12fb8aeff6dafc00932b64c7ae6207f6aaa2f2e8"
+          }
+        },
+        {
+          "client_id": "778250730693-jgivrh8sckj64fube9its3u53bcq0dbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrhMvi7qWp1uizR43pC23iuRUPNLVjUlE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778250730693-jgivrh8sckj64fube9its3u53bcq0dbs.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

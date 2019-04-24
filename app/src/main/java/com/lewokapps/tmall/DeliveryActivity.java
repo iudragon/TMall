@@ -527,6 +527,8 @@ public class DeliveryActivity extends AppCompatActivity {
                 Map<String, Object> orderDetails = new HashMap<>();
                 orderDetails.put("ORDER ID", order_id);
                 orderDetails.put("Product id", cartItemModel.getProductID());
+                orderDetails.put("Product Image", cartItemModel.getProductImage());
+                orderDetails.put("Product Title", cartItemModel.getProductTitle());
                 orderDetails.put("User id", userID);
                 orderDetails.put("Product Quantity", cartItemModel.getProductQuantity());
 
