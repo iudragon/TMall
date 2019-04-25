@@ -24,6 +24,7 @@ public class MyOrdersFragment extends Fragment {
     }
 
     private RecyclerView myOrdersRecyclerView;
+    public static MyOrderAdapter myOrderAdapter;
 
 
     @Override
@@ -38,7 +39,7 @@ public class MyOrdersFragment extends Fragment {
 
 
 
-        MyOrderAdapter myOrderAdapter = new MyOrderAdapter(DBqueries.myOrderItemModelList);
+         myOrderAdapter = new MyOrderAdapter(DBqueries.myOrderItemModelList);
         myOrdersRecyclerView.setAdapter(myOrderAdapter);
 
         if (DBqueries.myOrderItemModelList.size() == 0){

@@ -7,7 +7,7 @@ public class MyOrderItemModel {
     private String productId;
     private String productImage;
     private String productTitle;
-    private int rating;
+    private int rating = 0;
     private String address;
     private String orderStatus;
     private String couponId;
@@ -50,6 +50,14 @@ public class MyOrderItemModel {
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
         this.userId = userId;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public String getProductId() {
