@@ -652,7 +652,7 @@ public class DBqueries {
                                 if (task.isSuccessful()) {
                                     for (DocumentSnapshot orderItems : task.getResult().getDocuments()) {
 
-                                        final MyOrderItemModel myOrderItemModel = new MyOrderItemModel(orderItems.getString("Product id"), orderItems.getString("Product Image"), orderItems.getString("Product Title"), orderItems.getString("Address"), orderItems.getString("Order Status"), orderItems.getString("Coupon id"), orderItems.getString("Cutted Price"), orderItems.getDate("Ordered date"), orderItems.getDate("Packed date"), orderItems.getDate("Shipped date"), orderItems.getDate("Delivered date"), orderItems.getDate("Cancelled date"), orderItems.getString("Discounted Price"), orderItems.getLong("Free Coupons"), orderItems.getString("FullName"), orderItems.getString("ORDER ID"), orderItems.getString("Payment Method"), orderItems.getString("Pincode"), orderItems.getString("Product Price"), orderItems.getLong("Product Quantity"), orderItems.getString("User id"));
+                                        final MyOrderItemModel myOrderItemModel = new MyOrderItemModel(orderItems.getString("Product id"), orderItems.getString("Product Image"), orderItems.getString("Product Title"), orderItems.getString("Address"), orderItems.getString("Order Status"), orderItems.getString("Coupon id"), orderItems.getString("Cutted Price"), orderItems.getDate("Ordered date"), orderItems.getDate("Packed date"), orderItems.getDate("Shipped date"), orderItems.getDate("Delivered date"), orderItems.getDate("Cancelled date"), orderItems.getString("Discounted Price"), orderItems.getLong("Free Coupons"), orderItems.getString("FullName"), orderItems.getString("ORDER ID"), orderItems.getString("Payment Method"), orderItems.getString("Pincode"), orderItems.getString("Product Price"), orderItems.getLong("Product Quantity"), orderItems.getString("User id"), orderItems.getString("Delivery Price"));
 
 
                                         myOrderItemModelList.add(myOrderItemModel);
@@ -696,6 +696,8 @@ public class DBqueries {
         myRating.clear();
         addressesModelList.clear();
         rewardModelList.clear();
+
+        myOrderItemModelList.clear();
     }
 
 }

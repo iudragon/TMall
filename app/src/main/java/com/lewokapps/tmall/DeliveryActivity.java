@@ -569,6 +569,9 @@ public class DeliveryActivity extends AppCompatActivity {
                 orderDetails.put("Pincode", pincode.getText());
 
                 orderDetails.put("Free Coupons", cartItemModel.getFreeCoupons());
+                orderDetails.put("Delivery Price", cartItemModel.getDeliveryPrice());
+
+
                 firebaseFirestore.collection("ORDERS").document(order_id).collection("OrderItems").document(cartItemModel.getProductID()).set(orderDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

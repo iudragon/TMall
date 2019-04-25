@@ -225,7 +225,7 @@ public class SignUpFragment extends Fragment {
                         if (task.isSuccessful()) {
 
                             Map<String, Object> userData = new HashMap<>();
-                            userData.put("fullname", fullname.getText().toString());
+                            userData.put("FullName", fullname.getText().toString());
 
                             firebaseFirestore.collection("USERS").document(firebaseAuth.getUid())
                                     .set(userData).addOnCompleteListener(new OnCompleteListener<Void>() {
